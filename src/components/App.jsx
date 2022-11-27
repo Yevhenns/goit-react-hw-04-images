@@ -16,12 +16,22 @@ export const App = () => {
   const [imageName, setImageName] = useState('');
   const [currentImage, setCurrentImage] = useState(null);
 
-  // componentDidUpdate(prevProps, prevState) {
-  //   const { imageName, page } = this.state;
-  //   if (prevState.imageName !== imageName || prevState.page !== page) {
-  //     this.getImages();
-  //   }
-  // }
+  useEffect(() => {
+    if (imageName === '') {
+      return;
+    }
+
+    setIsLoading(true);
+
+    fetchImages(imageName, page)
+      .then(resp => {
+        setImages(prevState => {
+          return [...prevState, ...helper(resp.data.hits)];
+        });
+      })
+      .catch(error => console.log(error.message))
+      .finally(() => setIsLoading(false));
+  }, [page, imageName]);
 
   const handleSubmit = query => {
     if (query !== imageName) {
@@ -32,55 +42,31 @@ export const App = () => {
     setImageName(query);
   };
 
-  const getImages = () => {
-    setIsLoading(true);
-    fetchImages(imageName, page)
-      .then(resp => {
-        this.setImages(prevState => [
-          ...prevState.images,
-          ...helper(resp.data.hits),
-        ]);
-      })
-      .catch(error => {
-        console.log(error.message);
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
+  const loadMore = () => {
+    setPage(prevePage => prevePage + 1);
   };
 
-  // loadMore = () => {
-  //   this.setState(prevState => ({
-  //     page: prevState.page + 1,
-  //   }));
-  // };
+  const showImage = data => {
+    setCurrentImage(data);
+  };
 
-  // showImage = data => {
-  //   this.setState({ currentImage: data });
-  // };
-
-  // closeModal = () => {
-  //   this.setState({ currentImage: null });
-  // };
+  const closeModal = () => {
+    setCurrentImage(null);
+  };
 
   return (
     <div className={css.App}>
       <Searchbar onSubmit={handleSubmit} />
-      {/* {this.state.isShown && (
+      {isShown && (
         <>
-          <ImageGallery array={this.state.images} onClick={this.showImage} />
-          {!this.setState.isShown && (
-            <Button text="Load more" сlickHandler={this.loadMore} />
-          )}
+          <ImageGallery array={images} onClick={showImage} />
+          <Button text="Load more" сlickHandler={loadMore} />
         </>
       )}
-      {this.state.isLoading && <Loader />}
-      {this.state.currentImage && (
-        <Modal
-          currentImage={this.state.currentImage}
-          closeModal={this.closeModal}
-        />
-      )} */}
+      {isLoading && <Loader />}
+      {currentImage && (
+        <Modal currentImage={currentImage} closeModal={closeModal} />
+      )}
     </div>
   );
 };
