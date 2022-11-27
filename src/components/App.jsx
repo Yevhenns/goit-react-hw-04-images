@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Searchbar } from './Searchbar/Searchbar';
 import { ImageGallery } from './ImageGallery/ImageGallery';
 import { Button } from './Button/Button';
@@ -23,34 +23,31 @@ export const App = () => {
   //   }
   // }
 
-  const handleSubmit = imageName => {
-    if (imageName !== imageName) {
+  const handleSubmit = query => {
+    if (query !== imageName) {
       setPage(1);
       setImages([]);
       setIsShown(true);
     }
-    setImageName(imageName);
+    setImageName(query);
   };
 
-  // getImages = () => {
-  //   this.setState({
-  //     isLoading: true,
-  //   });
-  //   fetchImages(this.state.imageName, this.state.page)
-  //     .then(resp => {
-  //       this.setState(prevState => ({
-  //         images: [...prevState.images, ...helper(resp.data.hits)],
-  //       }));
-  //     })
-  //     .catch(error => {
-  //       console.log(error.message);
-  //     })
-  //     .finally(() => {
-  //       this.setState({
-  //         isLoading: false,
-  //       });
-  //     });
-  // };
+  const getImages = () => {
+    setIsLoading(true);
+    fetchImages(imageName, page)
+      .then(resp => {
+        this.setImages(prevState => [
+          ...prevState.images,
+          ...helper(resp.data.hits),
+        ]);
+      })
+      .catch(error => {
+        console.log(error.message);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  };
 
   // loadMore = () => {
   //   this.setState(prevState => ({
