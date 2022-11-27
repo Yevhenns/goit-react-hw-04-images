@@ -3,20 +3,20 @@ import PropTypes from 'prop-types';
 import css from './SearchBar.module.css';
 
 export const Searchbar = ({ onSubmit }) => {
-  const [imageName, setImageName] = useState('');
+  const [query, setquery] = useState('');
 
   const handleNameChange = e => {
-    setImageName(e.target.value.toLowerCase());
+    setquery(e.target.value.toLowerCase());
   };
 
   const handleSubmit = e => {
     e.preventDefault();
-    if (imageName.trim() === '') {
+    if (query.trim() === '') {
       alert('Empty request');
       return;
     }
-    onSubmit(imageName);
-    setImageName('');
+    onSubmit(query);
+    setquery('');
   };
 
   return (
@@ -31,7 +31,7 @@ export const Searchbar = ({ onSubmit }) => {
         </button>
 
         <input
-          value={imageName}
+          value={query}
           onChange={handleNameChange}
           className={css.SearchFormInput}
           type="text"
