@@ -3,10 +3,10 @@ import PropTypes from 'prop-types';
 import css from './SearchBar.module.css';
 
 export const Searchbar = ({ onSubmit }) => {
-  const [imageName, SetImageName] = useState('');
+  const [imageName, setImageName] = useState('');
 
   const handleNameChange = e => {
-    SetImageName(e.target.value.toLowerCase());
+    setImageName(e.target.value.toLowerCase());
   };
 
   const handleSubmit = e => {
@@ -16,7 +16,7 @@ export const Searchbar = ({ onSubmit }) => {
       return;
     }
     onSubmit(imageName);
-    SetImageName('');
+    setImageName('');
   };
 
   return (
